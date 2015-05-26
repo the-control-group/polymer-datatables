@@ -11,14 +11,14 @@
       data: [],
       timeFormat: '-MM-DD-YY',
       exportData: [],
-      displyTime: '',
+      displayTime: '',
     },
     export: function(event, detail, sender) {
       var poly = this;
       poly.exportData = [];
 
       if( poly.timeFormat ) {
-        poly.displyTime = moment().format(poly.timeFormat);
+        poly.displayTime = moment().format(poly.timeFormat);
       }
 
       // Add titles

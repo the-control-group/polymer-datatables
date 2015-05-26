@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="polymer-datatables-table" attributes="data columns perPage resultTotal perPageCount pageTotal tableApi currentPage serverSide options filters">
+<polymer-element name="polymer-datatables-table" attributes="data tableId columns perPage resultTotal perPageCount pageTotal tableApi currentPage serverSide options filters">
 <template>
 	<style>
 		.dataTables_filter,
@@ -12,8 +12,8 @@
 	<table id="table"></table>
 </template>
 <script src="../lodash/lodash.js"></script>
-<script src="../datatables/media/js/jquery.js"></script>
-<script src="../datatables/media/js/jquery.dataTables.min.js"></script>
+<script src="../DataTables/media/js/jquery.js"></script>
+<script src="../DataTables/media/js/jquery.dataTables.min.js"></script>
 <script>
 Polymer({
 	publish: {
@@ -28,13 +28,14 @@ Polymer({
 		isLoaded: false, // workaround to fire datatables
 	},
 	setTableData: function() {
-		if( this.table ) {
-			this.job('set-table-data',function(){
-				this.isLoaded = true;
-				this.table.fnClearTable();
-				this.table.fnAddData(this.data);
-				this.resultTotal = this.data.length;
-				this.fire('done');
+		var poly = this;
+		if( poly.table ) {
+			poly.job('set-table-data',function(){
+				poly.isLoaded = true;
+				poly.table.fnClearTable();
+				poly.table.fnAddData(poly.data);
+				poly.resultTotal = poly.data.length;
+				poly.fire('done');
 			},100);
 		}
 	},
@@ -47,6 +48,7 @@ Polymer({
 	ready: function() {
 		var poly = this;
 		poly.async(function() {
+			$.fn.dataTableExt.sErrMode = 'throw';
 			var t = $(poly.$.table);
 			// Create Datatables
 			poly.table = t.dataTable(_.extend({

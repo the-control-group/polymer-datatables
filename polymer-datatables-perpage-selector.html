@@ -1,19 +1,23 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-collapse/core-collapse.html">
+<link rel="import" href="../core-menu/core-menu.html">
+<link rel="import" href="../paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-dropdown-menu.html">
 
 <polymer-element name="polymer-datatables-perpage-selector" attributes="perPage perPageCount currentPage pageTotal">
   <template>
     <div id="perPageCount"></div>
-      <span>Rows Per Page:</span>
-      <select id="perPageSelector" on-change="{{ updatePageCount }}">
-        <template repeat="{{ count in perPageCount }}">
-          <template if="{{ count == perPage }}">
-            <option value="{{ count }}" selected="selected">{{ count }}</option>
-          </template>
-          <template if="{{ count != perPage }}">
-            <option value="{{ count }}">{{ count }}</option>
-          </template>
-        </template>
-      </select>
+
+      <paper-dropdown-menu label="Rows Per Page:" id="filter">
+        <paper-dropdown class="dropdown">
+          <core-menu valueattr="label" class="menu" selected="{{ selected}}">
+            <template repeat="{{ count in perPageCount }}">
+              <paper-item label="{{ count }}">{{ count }}</paper-item>
+            </template>
+          </core-menu>
+        </paper-dropdown>
+      </paper-dropdown-menu>
     </div>
   </template>
   <script>
@@ -23,9 +27,11 @@
       perPageCount: [10,25,50,100],
       pageTotal: 1,
     },
-    updatePageCount: function(event, detail, sender) {
-      this.perPage = Number( sender.value );
-      if( this.currentPage > this.pageTotal ) this.currentPage = this.pageTotal;
+    selectedChanged: function(oldValue,newValue) {
+      if( newValue ) {
+        this.perPage = Number( newValue );
+        if( this.currentPage > this.pageTotal ) this.currentPage = this.pageTotal;
+      }
     },
   });
   </script>

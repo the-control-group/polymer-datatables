@@ -3,7 +3,12 @@
 
 <polymer-element name="polymer-datatables-export-csv" extends="polymer-datatables-export">
   <template>
-    <a href="#" on-tap="{{ export }}" class="export-pdf">Export CSV</a>
+    <style>
+    a {
+      cursor: pointer;
+    }
+    </style>
+    <a on-tap="{{ export }}" class="export-pdf"><content></content></a>
   </template>
   <script>
   Polymer({
@@ -11,6 +16,7 @@
       var poly = this;
       poly.super();
 
+      sender.setAttribute("href");
       // Format for CSV
       var csvContent = "data:text/csv;charset=utf-8,";
       poly.exportData.forEach(function(row, index){
@@ -21,7 +27,7 @@
 
       // Download CSV
       sender.setAttribute("href", encodedUri);
-      sender.setAttribute("download", poly.filename+poly.DisplayTime+".csv");
+      sender.setAttribute("download", poly.filename+poly.displayTime+".csv");
       sender.click();
     },
   });

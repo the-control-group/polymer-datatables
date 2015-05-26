@@ -1,18 +1,29 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-collapse/core-collapse.html">
+<link rel="import" href="../core-menu/core-menu.html">
+<link rel="import" href="../paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-dropdown-menu.html">
 
-<polymer-element name="polymer-datatables-filter" attributes="column columns filters tableApi">
+<polymer-element name="polymer-datatables-filter" attributes="column columns label filters tableApi">
   <template>
-    <select id="filter">
-      <template repeat="{{ option in options }}">
-        <option value="{{ option }}">{{ option }}</option>
-      </template>
-    </select>
+    <paper-dropdown-menu label="{{ label }}" id="filter">
+      <paper-dropdown class="dropdown">
+        <core-menu valueattr="label" class="menu" selected="{{ selected}}">
+          <template repeat="{{ option in options }}">
+            <paper-item label="{{ option }}">{{ option }}</paper-item>
+          </template>
+        </core-menu>
+      </paper-dropdown>
+    </paper-dropdown-menu>
+
   </template>
   <script src="../lodash/lodash.js"></script>
   <script src="../datatables/media/js/jquery.js"></script>
   <script>
   Polymer({
     publish: {
+      label: 'Select Option',
       column: '',
       options: [],
       filters: {},
@@ -22,7 +33,9 @@
     setOptions: function() {
       if( this.filters && this.filters[this.column] ) {
         this.options = _.clone(this.filters[this.column]);
-        this.options.unshift('');
+        var index = _.indexOf(this.options,'');
+        if( index != -1 ) this.options.splice(index, 1)
+        this.options.unshift('All');
         var poly = this;
         _.each(poly.columns,function(column, i) {
           if( column.data == poly.column ) poly.columnIndex = i;
@@ -32,17 +45,20 @@
     filtersChanged: function(oldValue,newValue) {
       if( newValue ) this.setOptions();
     },
-    ready: function() {
-      var poly = this;
-      $(this.$.filter).on('change',function(e) {
-        var self = $(this);
-        var val = $.fn.dataTable.util.escapeRegex(
-          self.val()
-        );
+    selectedChanged: function(oldValue,newValue) {
+      if( newValue ) {
+        var poly = this;
+        var val = '';
+        if( newValue != 'All' ) {
+          val = $.fn.dataTable.util.escapeRegex(newValue);
+        }
         poly.tableApi.column(poly.columnIndex)
           .search( val ? '^'+val+'$' : '', true, false )
           .draw();
-      })
+      }
+    },
+    onSelect: function(event, detail, sender) {
+      this.$.filter.getSelection();
     },
   });
   </script>
