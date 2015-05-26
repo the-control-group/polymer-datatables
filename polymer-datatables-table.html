@@ -1,0 +1,117 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="polymer-datatables-table" attributes="data columns perPage resultTotal perPageCount pageTotal tableApi currentPage serverSide options filters">
+<template>
+	<style>
+		.dataTables_filter,
+		.dataTables_length,
+		.dataTables_paginate {
+			display: none;
+		}
+	</style>
+	<table id="table"></table>
+</template>
+<script src="../lodash/lodash.js"></script>
+<script src="../datatables/media/js/jquery.js"></script>
+<script src="../datatables/media/js/jquery.dataTables.min.js"></script>
+<script>
+Polymer({
+	publish: {
+		table: null,
+		tableApi: null,
+		data: [],
+		perPage: 10,
+		currentPage: 1,
+		resultTotal: 0,
+		options: {},
+		filters: {},
+		isLoaded: false, // workaround to fire datatables
+	},
+	setTableData: function() {
+		if( this.table ) {
+			this.job('set-table-data',function(){
+				this.isLoaded = true;
+				this.table.fnClearTable();
+				this.table.fnAddData(this.data);
+				this.resultTotal = this.data.length;
+				this.fire('done');
+			},100);
+		}
+	},
+	setTableHeader: function() {
+		$(this.$.table).find('th').each(function() {
+			var self = $(this);
+			self.html( '<span class="tableHead">'+self.html()+'</span>' );
+		});
+	},
+	ready: function() {
+		var poly = this;
+		poly.async(function() {
+			var t = $(poly.$.table);
+			// Create Datatables
+			poly.table = t.dataTable(_.extend({
+				columns: poly.columns,
+				serverSide: poly.serverSide,
+				info: false,
+				pageLength: poly.perPage,
+				autoWidth: false,
+			}, poly.options));
+			// Store Datatables API
+			poly.tableApi = t.DataTable();
+			// Create Filters
+			t.on('draw.dt', function() {
+				poly.job('tableFilter',function() {
+					if( poly.isLoaded) {
+						poly.filters = {};
+						poly.tableApi.columns().every( function () {
+							var column = this;
+							var key = poly.columns[column.index()].data;
+							poly.filters[key] = [];
+							column.data().unique().sort().each( function ( d, j ) {
+								poly.filters[key].push(d);
+							});
+						});
+						poly.isLoaded = false;
+						poly.fire('done');
+					}
+				}, 100);
+			});
+			t.on('search.dt', function() {
+				poly.job('tableSearch',function() {
+					var info = poly.tableApi.page.info();
+					if( info.pages ) {
+						poly.pageTotal = info.pages;
+					} else {
+						poly.pageTotal = 1;
+					}
+					this.resultTotal = info.recordsDisplay;
+				}, 100);
+			});
+
+
+			poly.pageTotal = Math.ceil( poly.data.length / poly.perPage ) || 1;
+			poly.setTableHeader();
+			poly.setTableData();
+		});
+	},
+	columnsChanged: function(oldValue,newValue) {
+		if( newValue ) {
+			for (var i = newValue.length - 1; i >= 0; i--) {
+				newValue[i].title = newValue[i].title || newValue[i].data;
+			}
+			this.setTableData();
+			this.setTableHeader();
+		}
+	},
+	perPageChanged: function(oldValue,newValue) {
+		if( newValue && this.tableApi ) this.tableApi.page.len( newValue ).draw();
+	},
+	currentPageChanged: function(oldValue,newValue) {
+		if( newValue && this.tableApi ) this.tableApi.page(newValue-1).draw( false );
+	},
+	dataChanged: function(oldValue,newValue) {
+		if( newValue ) this.setTableData();
+	},
+});
+</script>
+</polymer-element>

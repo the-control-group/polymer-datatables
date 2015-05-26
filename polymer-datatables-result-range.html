@@ -1,0 +1,43 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="polymer-datatables-result-range" attributes="resultTotal perPage paginationRange currentPage displayPages displayResultRange">
+  <template>
+    <div id="resultRange">
+      <span class="resultRangeStart">{{ resultRangeStart }}</span> -
+      <span class="resultRangeEnd">{{ resultRangeEnd }}</span> of
+      <span class="resultTotal">{{ resultTotal }}</span>
+    </div>
+  </template>
+  <script>
+  Polymer({
+    publish: {
+      perPage: 10,
+      currentPage: 1,
+      resultRangeStart: 0,
+      resultRangeEnd: 0,
+      resultTotal: 0,
+    },
+    setResultRange: function() {
+      this.resultRangeStart = (this.perPage * (this.currentPage - 1)) + 1;
+      var end = this.perPage * this.currentPage;
+      if( end > this.resultTotal ) end = this.resultTotal;
+      this.resultRangeEnd = end;
+    },
+    updatePage: function(event, detail, sender) {
+      this.currentPage = Number( sender.getAttribute("number") );
+    },
+    perPageChanged: function(oldValue,newValue) {
+      if( newValue ) this.setResultRange();
+    },
+    resultTotalChanged: function(oldValue,newValue) {
+      if( newValue ) this.setResultRange();
+    },
+    currentPageChanged: function(oldValue,newValue) {
+      if( newValue ) this.setResultRange();
+    },
+    ready: function() {
+      this.setResultRange();
+    },
+  });
+  </script>
+</polymer-element>

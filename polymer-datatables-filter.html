@@ -1,0 +1,49 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="polymer-datatables-filter" attributes="column columns filters tableApi">
+  <template>
+    <select id="filter">
+      <template repeat="{{ option in options }}">
+        <option value="{{ option }}">{{ option }}</option>
+      </template>
+    </select>
+  </template>
+  <script src="../lodash/lodash.js"></script>
+  <script src="../datatables/media/js/jquery.js"></script>
+  <script>
+  Polymer({
+    publish: {
+      column: '',
+      options: [],
+      filters: {},
+      tableApi: null,
+      columnIndex: 0,
+    },
+    setOptions: function() {
+      if( this.filters && this.filters[this.column] ) {
+        this.options = _.clone(this.filters[this.column]);
+        this.options.unshift('');
+        var poly = this;
+        _.each(poly.columns,function(column, i) {
+          if( column.data == poly.column ) poly.columnIndex = i;
+        });
+      }
+    },
+    filtersChanged: function(oldValue,newValue) {
+      if( newValue ) this.setOptions();
+    },
+    ready: function() {
+      var poly = this;
+      $(this.$.filter).on('change',function(e) {
+        var self = $(this);
+        var val = $.fn.dataTable.util.escapeRegex(
+          self.val()
+        );
+        poly.tableApi.column(poly.columnIndex)
+          .search( val ? '^'+val+'$' : '', true, false )
+          .draw();
+      })
+    },
+  });
+  </script>
+</polymer-element>

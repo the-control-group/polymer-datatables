@@ -1,0 +1,21 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="polymer-datatables-search" attributes="tableApi placeholder">
+  <template>
+    <input type="text" id="search" placeholder="{{ placeholder }}">
+  </template>
+  <script>
+  Polymer({
+    publish: {
+      placeholder: "Search",
+      tableApi: null,
+    },
+    ready: function() {
+      var poly = this;
+      $(this.$.search).on('keyup', function() {
+        if( poly.tableApi ) poly.tableApi.search( this.value ).draw();
+      });
+    },
+  });
+  </script>
+</polymer-element>

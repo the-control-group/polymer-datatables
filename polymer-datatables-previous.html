@@ -1,0 +1,20 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="polymer-datatables-previous" attributes="tableApi currentPage">
+  <template>
+    <a on-tap="{{ previousPage }}" class="previewPage"><content></content></a>
+  </template>
+  <script>
+  Polymer({
+    publish: {
+      tableApi: null,
+    },
+    previousPage: function() {
+      if( this.tableApi && this.currentPage >= 0) {
+        this.currentPage--;
+        this.tableApi.page('previous').draw( false );
+      }
+    },
+  });
+  </script>
+</polymer-element>

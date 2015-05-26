@@ -1,0 +1,32 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="polymer-datatables-perpage-selector" attributes="perPage perPageCount currentPage pageTotal">
+  <template>
+    <div id="perPageCount"></div>
+      <span>Rows Per Page:</span>
+      <select id="perPageSelector" on-change="{{ updatePageCount }}">
+        <template repeat="{{ count in perPageCount }}">
+          <template if="{{ count == perPage }}">
+            <option value="{{ count }}" selected="selected">{{ count }}</option>
+          </template>
+          <template if="{{ count != perPage }}">
+            <option value="{{ count }}">{{ count }}</option>
+          </template>
+        </template>
+      </select>
+    </div>
+  </template>
+  <script>
+  Polymer({
+    publish: {
+      perPage: 25,
+      perPageCount: [10,25,50,100],
+      pageTotal: 1,
+    },
+    updatePageCount: function(event, detail, sender) {
+      this.perPage = Number( sender.value );
+      if( this.currentPage > this.pageTotal ) this.currentPage = this.pageTotal;
+    },
+  });
+  </script>
+</polymer-element>

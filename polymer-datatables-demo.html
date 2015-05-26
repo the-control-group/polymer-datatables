@@ -1,0 +1,79 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="polymer-datatables-export-csv.html">
+<link rel="import" href="polymer-datatables-filter.html">
+<link rel="import" href="polymer-datatables-next.html">
+<link rel="import" href="polymer-datatables-pages.html">
+<link rel="import" href="polymer-datatables-perpage-selector.html">
+<link rel="import" href="polymer-datatables-previous.html">
+<link rel="import" href="polymer-datatables-result-range.html">
+<link rel="import" href="polymer-datatables-search.html">
+<link rel="import" href="polymer-datatables-table.html">
+
+
+<polymer-element name="polymer-datatables-demo">
+  <template>
+    <!-- Datatables -->
+    <polymer-datatables-table
+      data="{{ data }}"
+      tableApi="{{ tableApi }}"
+      perPage="{{ perPage }}"
+      columns="{{ columns }}"
+      perPageCount="{{ perPageCount }}"
+      filters="{{ filters }}"
+      pageTotal="{{ pageTotal }}"
+      resultTotal="{{ resultTotal }}"
+      currentPage="{{ currentPage }}"></polymer-datatables-table>
+    <!-- Search Elements -->
+    <polymer-datatables-filter
+      tableApi="{{ tableApi }}"
+      column="position"
+      columns="{{ columns }}"
+      filters="{{ filters }}"></polymer-datatables-filter>
+    <polymer-datatables-search
+      tableApi="{{ tableApi }}"></polymer-datatables-search>
+    <!-- Pagination Elements -->
+    <polymer-datatables-pages
+      perPage="{{ perPage }}"
+      perPageCount="{{ perPageCount }}"
+      pageTotal="{{ pageTotal }}"
+      currentPage="{{ currentPage }}"></polymer-datatables-pages>
+    <polymer-datatables-perpage-selector
+      perPage="{{ perPage }}"
+      perPageCount="{{ perPageCount }}"
+      pageTotal="{{ pageTotal }}"
+      currentPage="{{ currentPage }}"></polymer-datatables-perpage-selector>
+    <polymer-datatables-result-range
+      data="{{ data }}"
+      perPage="{{ perPage }}"
+      resultTotal="{{ resultTotal }}"
+      perPageCount="{{ perPageCount }}"
+      currentPage="{{ currentPage }}"></polymer-datatables-result-range>
+    <polymer-datatables-previous
+      tableApi="{{ tableApi }}"
+      pageTotal="{{ pageTotal }}"
+      currentPage="{{ currentPage }}">Previous</polymer-datatables-previous>
+    <polymer-datatables-next
+      tableApi="{{ tableApi }}"
+      pageTotal="{{ pageTotal }}"
+      currentPage="{{ currentPage }}">Next</polymer-datatables-next>
+    <!-- Misc Elements -->
+    <polymer-datatables-export-csv
+      filename="csv"
+      columns="{{ columns }}"
+      data="{{ data }}"></polymer-datatables-export-csv>
+  </template>
+  <script src="../datatables/media/js/jquery.js"></script>
+  <script src="../datatables/media/js/jquery.dataTables.min.js"></script>
+  <script>
+  Polymer({
+      publish: {
+        name: 'Name of Table',
+        data: [],
+        columns: [],
+        perPage: 25,
+      },
+      ready: function() {
+      }
+  });
+  </script>
+</polymer-element>

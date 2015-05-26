@@ -1,0 +1,46 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="polymer-datatables-export" attributes="columns data filename timeFormat">
+  <template></template>
+  <script src="../lodash/lodash.js"></script>
+  <script src="../momentjs/moment.js"></script>
+  <script>
+  Polymer({
+    publish: {
+      filename: 'data-export',
+      data: [],
+      timeFormat: '-MM-DD-YY',
+      exportData: [],
+      displyTime: '',
+    },
+    export: function(event, detail, sender) {
+      var poly = this;
+      poly.exportData = [];
+
+      if( poly.timeFormat ) {
+        poly.displyTime = moment().format(poly.timeFormat);
+      }
+
+      // Add titles
+      var titles = [];
+      var keys = [];
+      _.each(poly.columns, function(col) {
+        if( col.data ) {
+          keys.push( col.data );
+          titles.push( col.title || col.data );
+        }
+      });
+      // Add data for csv
+      poly.exportData.push(titles);
+      _.each( poly.data, function(row) {
+        var d = [];
+        _.each(keys, function(key) {
+          row[key] = row[key] || '';
+          d.push( row[key].replace(/,/g, '').replace(/^\s+|\s+$/g, '') );
+        });
+        poly.exportData.push(d);
+      });
+    },
+  });
+  </script>
+</polymer-element>

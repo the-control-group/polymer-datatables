@@ -1,0 +1,29 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="./polymer-datatables-export.html">
+
+<polymer-element name="polymer-datatables-export-csv" extends="polymer-datatables-export">
+  <template>
+    <a href="#" on-tap="{{ export }}" class="export-pdf">Export CSV</a>
+  </template>
+  <script>
+  Polymer({
+    export: function(event, detail, sender) {
+      var poly = this;
+      poly.super();
+
+      // Format for CSV
+      var csvContent = "data:text/csv;charset=utf-8,";
+      poly.exportData.forEach(function(row, index){
+        dataString = row.join(",");
+        csvContent += index < poly.exportData.length ? dataString+ "\n" : dataString;
+      });
+      var encodedUri = encodeURI(csvContent);
+
+      // Download CSV
+      sender.setAttribute("href", encodedUri);
+      sender.setAttribute("download", poly.filename+poly.DisplayTime+".csv");
+      sender.click();
+    },
+  });
+  </script>
+</polymer-element>

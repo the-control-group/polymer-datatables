@@ -1,0 +1,86 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="polymer-datatables-pages" attributes="pageTotal perPage paginationRange currentPage">
+  <template>
+    <div id="pages">
+      <template repeat="{{ page in pages}}">
+        <template if="{{ page.number }}">
+          <a number="{{page.number}}"
+            on-tap="{{ updatePage }}"
+            class="page-number {{ {current: page.isCurrent } | tokenList }}">{{page.number}}</a>
+        </template>
+        <template if="{{ page.ellipsis }}">
+          <span class="ellipsis">...</span>
+        </template>
+      </template>
+    </div>
+  </template>
+  <script>
+  Polymer({
+    publish: {
+      paginationRange: 5,
+      perPage: 10,
+      pages: [],
+      pageTotal: 1,
+      currentPage: 1,
+    },
+    setPageRanges: function() {
+      var pages = [];
+      var diff = Math.floor(this.paginationRange/2);
+      var min = this.currentPage - diff;
+      var max = this.currentPage + diff;
+      if( min < 1 ) {
+        max = max - min;
+        min = 1;
+      }
+      if( max >= this.pageTotal ) {
+        var adjustMin = min + this.pageTotal - max;
+        if( adjustMin > 0 ) min = adjustMin;
+        max = this.pageTotal;
+      }
+      if( min != 1 ) {
+        pages.push({
+          number: 1
+        });
+        pages.push({
+          ellipsis: true
+        });
+      }
+      for (var i = min; i < max+1; i++) {
+        var page = {
+          number: i
+        };
+        if( i == this.currentPage ) page.isCurrent = true;
+        pages.push(page);
+      }
+      if( max != this.pageTotal ) {
+        pages.push({
+          ellipsis: true
+        });
+        pages.push({
+          number: this.pageTotal
+        });
+      }
+      this.pages = pages;
+    },
+    updatePage: function(event, detail, sender) {
+      this.currentPage = Number( sender.getAttribute("number") );
+    },
+    updatePageCount: function(event, detail, sender) {
+      this.perPage = Number( sender.value );
+    },
+    currentPageChanged: function(oldValue,newValue) {
+      if( newValue ) this.setPageRanges();
+    },
+    perPageChanged: function(oldValue,newValue) {
+      if( newValue ) this.setPageRanges();
+    },
+    pageTotalChanged: function(oldValue,newValue) {
+      if( newValue ) this.setPageRanges();
+    },
+    ready: function() {
+      this.setPageRanges();
+    },
+  });
+  </script>
+</polymer-element>

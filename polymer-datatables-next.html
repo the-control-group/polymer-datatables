@@ -1,0 +1,20 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="polymer-datatables-next" attributes="tableApi pageTotal currentPage">
+  <template>
+    <a on-tap="{{ nextPage }}" class="nextPage"><content></content></a>
+  </template>
+  <script>
+  Polymer({
+    publish: {
+      tableApi: null,
+    },
+    nextPage: function() {
+      if( this.tableApi && this.currentPage < this.pageTotal) {
+        this.currentPage++;
+        this.tableApi.page('next').draw( false );
+      }
+    },
+  });
+  </script>
+</polymer-element>

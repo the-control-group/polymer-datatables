@@ -1,0 +1,33 @@
+{
+  "name": "polymer-datatables",
+  "version": "0.1.0",
+  "authors": [
+    "Raymond Chou <raymond.chou@thecontrolgroup.com>"
+  ],
+  "description": "Datatable element that can handle data client side and server side",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "datatable",
+    "data-table"
+  ],
+  "main": "polymer-data-table.html",
+  "license": "MIT",
+  "homepage": "https://github.com/the-control-group/polymer-data-table",
+  "ignore": [
+    "/.*",
+    "/tests/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.2",
+    "DataTables": "~1.10.6",
+    "core-ajax": "Polymer/core-ajax#^0.5",
+    "lodash": "~3.9.0",
+    "momentjs": "~2.10.3"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^2.0.5",
+    "DataTables": "~1.10.6"
+  }
+}
