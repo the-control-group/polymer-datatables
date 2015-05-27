@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="polymer-datatables-table" attributes="data columns perPage resultTotal perPageCount pageTotal tableApi currentPage serverSide options filters">
+<polymer-element name="polymer-datatables-table" attributes="data orderBy columns perPage resultTotal perPageCount pageTotal tableApi currentPage serverSide options filters">
 <template>
 	<style>
 		.dataTables_filter,
@@ -21,51 +21,68 @@ Polymer({
 		tableApi: null,
 		data: [],
 		perPage: 10,
+		orderBy: [],
 		currentPage: 1,
 		resultTotal: 0,
 		options: {},
 		filters: {},
-		isLoaded: false, // workaround to fire datatables
+		isLoaded: false, // workaround to fire DT
 	},
 	setTableData: function() {
 		var poly = this;
-		if( poly.table && poly.data.length ) {
-			poly.job('set-table-data',function(){
-				poly.isLoaded = true;
-				poly.resultTotal = poly.data.length;
-				poly.createTable(poly.data);
-				poly.fire('done');
-			},100);
-		}
-	},
-	setTableHeader: function() {
-		$(this.$.table).find('th').each(function() {
-			var self = $(this);
-			self.html( '<span class="tableHead">'+self.html()+'</span>' );
-		});
+		poly.job('set-table-data',function(){
+			poly.isLoaded = true;
+			poly.createTable(poly.data);
+			poly.fire('done');
+		}, 100);
 	},
 	createTable: function(data) {
 		var poly = this;
-		// Create Datatables
 		var t = $(poly.$.table);
+		var order = [[0,"desc"]];
+
+		// Set order
+		if( poly.orderBy.length ) {
+			_.each(poly.columns,function(col,key) {
+				if( col.data == poly.orderBy[0] ) {
+					order = [[ key, poly.orderBy[1] ]];
+				}
+			});
+		}
+
+		// Create DT
 		poly.table = t.dataTable(_.extend({
 			data: data || [],
 			columns: poly.columns,
 			serverSide: poly.serverSide,
 			info: false,
+			order: order,
 			pageLength: poly.perPage,
 			autoWidth: false,
 		}, poly.options));
 
-		// Store Datatables API
+		// Store DT API
 		poly.tableApi = t.DataTable();
+
+		// Update Table Header
+		t.find('th').each(function() {
+			var self = $(this);
+			self.html( '<span class="tableHead">'+self.html()+'</span>' );
+		});
+
+		// Set Misc Variables
+		poly.resultTotal = poly.data.length;
+		poly.pageTotal = Math.ceil( poly.data.length / poly.perPage ) || 1;
 	},
 	ready: function() {
 		var poly = this;
 		poly.async(function() {
+			// DT throws errors instead of alerting
 			$.fn.dataTableExt.sErrMode = 'throw';
+
+			// Create Table
 			var t = $(poly.$.table);
-			poly.createTable();
+			poly.setTableData();
 			// Create Filters
 			t.on('draw.dt', function() {
 				poly.job('tableFilter',function() {
@@ -84,6 +101,7 @@ Polymer({
 					}
 				}, 100);
 			});
+			// Setup Search
 			t.on('search.dt', function() {
 				poly.job('tableSearch',function() {
 					var info = poly.tableApi.page.info();
@@ -95,11 +113,6 @@ Polymer({
 					this.resultTotal = info.recordsDisplay;
 				}, 100);
 			});
-
-
-			poly.pageTotal = Math.ceil( poly.data.length / poly.perPage ) || 1;
-			poly.setTableHeader();
-			poly.setTableData();
 		});
 	},
 	columnsChanged: function(oldValue,newValue) {
@@ -108,7 +121,6 @@ Polymer({
 				newValue[i].title = newValue[i].title || newValue[i].data;
 			}
 			this.setTableData();
-			this.setTableHeader();
 		}
 	},
 	perPageChanged: function(oldValue,newValue) {
