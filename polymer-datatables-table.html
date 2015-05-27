@@ -50,6 +50,9 @@ Polymer({
 			});
 		}
 
+		// Destroy old table
+		if( poly.tableApi ) poly.tableApi.destroy();
+
 		// Create DT
 		poly.table = t.dataTable(_.extend({
 			data: data || [],
@@ -130,7 +133,11 @@ Polymer({
 		if( newValue && this.tableApi ) this.tableApi.page(newValue-1).draw( false );
 	},
 	dataChanged: function(oldValue,newValue) {
-		if( newValue ) this.setTableData();
+
+		if( newValue ) {
+			this.setTableData();
+			console.log( newValue.length)
+		}
 	},
 });
 </script>
