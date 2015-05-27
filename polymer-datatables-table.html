@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="polymer-datatables-table" attributes="data tableId columns perPage resultTotal perPageCount pageTotal tableApi currentPage serverSide options filters">
+<polymer-element name="polymer-datatables-table" attributes="data columns perPage resultTotal perPageCount pageTotal tableApi currentPage serverSide options filters">
 <template>
 	<style>
 		.dataTables_filter,
@@ -29,12 +29,11 @@ Polymer({
 	},
 	setTableData: function() {
 		var poly = this;
-		if( poly.table ) {
+		if( poly.table && poly.data.length ) {
 			poly.job('set-table-data',function(){
 				poly.isLoaded = true;
-				poly.table.fnClearTable();
-				poly.table.fnAddData(poly.data);
 				poly.resultTotal = poly.data.length;
+				poly.createTable(poly.data);
 				poly.fire('done');
 			},100);
 		}
@@ -45,21 +44,28 @@ Polymer({
 			self.html( '<span class="tableHead">'+self.html()+'</span>' );
 		});
 	},
+	createTable: function(data) {
+		var poly = this;
+		// Create Datatables
+		var t = $(poly.$.table);
+		poly.table = t.dataTable(_.extend({
+			data: data || [],
+			columns: poly.columns,
+			serverSide: poly.serverSide,
+			info: false,
+			pageLength: poly.perPage,
+			autoWidth: false,
+		}, poly.options));
+
+		// Store Datatables API
+		poly.tableApi = t.DataTable();
+	},
 	ready: function() {
 		var poly = this;
 		poly.async(function() {
 			$.fn.dataTableExt.sErrMode = 'throw';
 			var t = $(poly.$.table);
-			// Create Datatables
-			poly.table = t.dataTable(_.extend({
-				columns: poly.columns,
-				serverSide: poly.serverSide,
-				info: false,
-				pageLength: poly.perPage,
-				autoWidth: false,
-			}, poly.options));
-			// Store Datatables API
-			poly.tableApi = t.DataTable();
+			poly.createTable();
 			// Create Filters
 			t.on('draw.dt', function() {
 				poly.job('tableFilter',function() {

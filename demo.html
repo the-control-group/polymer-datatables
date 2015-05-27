@@ -17,6 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 <body style="background:#f1f1f1;">
   <template id="page-template" is="auto-binding">
+    <polymer-datatables-demo data="{{ data2 }}" id="mytable" columns="{{ columns }}" numbers="true" search="{{ search }}" name="New Customers"></polymer-datatables-demo>
     <polymer-datatables-demo data="{{ data }}" id="mytable" columns="{{ columns }}" numbers="true" search="{{ search }}" name="New Customers"></polymer-datatables-demo>
   </template>
 
@@ -487,6 +488,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           "start_date": "2011/01/25",
           "office": "New York",
           "extn": "4226"
+        }
+    ];
+    template.data2 = [
+        {
+          "name": "Tiger Nixon",
+          "position": "System Architect",
+          "salary": "$320,800",
+          "start_date": "2011/04/25",
+          "office": "Edinburgh",
+          "extn": "5421"
         }
     ];
   </script>
