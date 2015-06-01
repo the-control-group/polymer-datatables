@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>polymer-datatables-pages tests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../jquery/dist/jquery.min.js"></script>
+  <script src="../../lodash/lodash.js"></script>
+  <link rel="import" href="../polymer-datatables-pages.html">
+</head>
+<body unresolved>
+  <polymer-datatables-pages
+    pageTotal="{{ pageTotal }}"
+    perPage="{{ perPage }}"
+    paginationRange="{{ paginationRange }}"
+    currentPage="{{ currentPage }}"></polymer-datatables-pages>
+  <script>
+
+    window.addEventListener('polymer-ready', function(e) {
+      var el = document.querySelector('polymer-datatables-pages');
+      el.pageTotal = 50;
+      el.perPage = 5;
+      el.paginationRange = 5;
+
+      suite('<polymer-datatables-pages>', function () {
+        test('initializes', function () {
+          assert(el._readied);
+        });
+        test('Set active class', function (done) {
+          var active = 9;
+          el.currentPage = active;
+          flush(function() {
+            var item = el.$.pages.querySelector('[number="'+active+'"]');
+            assert( $(item).hasClass('current') );
+            done();
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>

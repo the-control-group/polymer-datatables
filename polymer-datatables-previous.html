@@ -10,7 +10,7 @@
       tableApi: null,
     },
     previousPage: function() {
-      if( this.tableApi && this.currentPage >= 0) {
+      if( this.tableApi && this.currentPage > 0) {
         this.currentPage--;
         this.tableApi.page('previous').draw( false );
       }

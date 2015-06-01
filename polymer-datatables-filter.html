@@ -5,7 +5,7 @@
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 
-<polymer-element name="polymer-datatables-filter" attributes="column columns label filters tableApi">
+<polymer-element name="polymer-datatables-filter" attributes="column columns label filters tableApi options">
   <template>
     <paper-dropdown-menu label="{{ label }}" id="filter">
       <paper-dropdown class="dropdown">
@@ -19,7 +19,6 @@
 
   </template>
   <script src="../lodash/lodash.js"></script>
-  <script src="../datatables/media/js/jquery.js"></script>
   <script>
   Polymer({
     publish: {

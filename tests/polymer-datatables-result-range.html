@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>polymer-datatables-result-range tests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../jquery/dist/jquery.min.js"></script>
+  <script src="../../lodash/lodash.js"></script>
+  <link rel="import" href="../polymer-datatables-result-range.html">
+</head>
+<body unresolved>
+  <polymer-datatables-result-range
+    resultTotal="{{ resultTotal }}"
+    perPage="{{ perPage }}"
+    paginationRange="{{ paginationRange }}"
+    currentPage="{{ currentPage }}"
+    displayPages="{{ displayPages }}"
+    displayResultRange="{{ displayResultRange }}"></polymer-datatables-result-range>
+  <script>
+
+    window.addEventListener('polymer-ready', function(e) {
+      var el = document.querySelector('polymer-datatables-result-range');
+      var resultRangeStart = $( el.$.resultRange.querySelector('.resultRangeStart') );
+      var resultRangeEnd = $( el.$.resultRange.querySelector('.resultRangeEnd') );
+      var resultTotal = $( el.$.resultRange.querySelector('.resultTotal') );
+
+      suite('<polymer-datatables-result-range>', function () {
+        test('initializes', function () {
+          assert(el._readied);
+        });
+        test('correctly displays first page', function (done) {
+          el.resultTotal = 50;
+          el.perPage = 5;
+          el.currentPage = 1;
+          flush(function(){
+            assert.equal( resultRangeStart.html(), 1);
+            assert.equal( resultRangeEnd.html(), 5);
+            assert.equal( resultTotal.html(), 50);
+            done();
+          });
+        });
+        test('correctly displays last page', function (done) {
+          el.resultTotal = 9;
+          el.perPage = 5;
+          el.currentPage = 2;
+          flush(function(){
+            assert.equal( resultRangeStart.html(), 6);
+            assert.equal( resultRangeEnd.html(), 9);
+            assert.equal( resultTotal.html(), 9);
+            done();
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>

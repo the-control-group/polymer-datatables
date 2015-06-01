@@ -1,6 +1,6 @@
 {
   "name": "polymer-datatables",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "authors": [
     "Raymond Chou <raymond.chou@thecontrolgroup.com>"
   ],
@@ -24,7 +24,9 @@
     "DataTables": "~1.10.6",
     "core-ajax": "Polymer/core-ajax#^0.5",
     "lodash": "~3.9.0",
-    "momentjs": "~2.10.3"
+    "momentjs": "~2.10.3",
+    "core-elements": "Polymer/core-elements#^0.5",
+    "paper-elements": "Polymer/paper-elements#~0.5.6"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^2.0.5",

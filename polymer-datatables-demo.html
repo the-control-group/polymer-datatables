@@ -9,7 +9,6 @@
 <link rel="import" href="polymer-datatables-search.html">
 <link rel="import" href="polymer-datatables-table.html">
 
-
 <polymer-element name="polymer-datatables-demo">
   <template>
     <!-- Datatables -->
@@ -60,7 +59,7 @@
     <polymer-datatables-export-csv
       filename="csv"
       columns="{{ columns }}"
-      data="{{ data }}"></polymer-datatables-export-csv>
+      data="{{ data }}">Export</polymer-datatables-export-csv>
   </template>
   <script>
   Polymer({
@@ -69,19 +68,6 @@
         data: [],
         columns: [],
         perPage: 25,
-      },
-      ready: function() {
-        // var poly = this;
-        // setTimeout(function() {
-        //   poly.data = [{
-        //     "name": "Tiger Nixon",
-        //     "position": "System Architect",
-        //     "salary": "$320,800",
-        //     "start_date": "2011/04/25",
-        //     "office": "Edinburgh",
-        //     "extn": "5421"
-        //   }];
-        // }, 2000);
       }
   });
   </script>

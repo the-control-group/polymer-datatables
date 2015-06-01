@@ -16,7 +16,6 @@
       var poly = this;
       poly.super();
 
-      sender.setAttribute("href","");
       // Format for CSV
       var csvContent = "data:text/csv;charset=utf-8,";
       poly.exportData.forEach(function(row, index){
@@ -29,6 +28,8 @@
       sender.setAttribute("href", encodedUri);
       sender.setAttribute("download", poly.filename+poly.displayTime+".csv");
       sender.click();
+      // Reset
+      sender.setAttribute("href","");
     },
   });
   </script>

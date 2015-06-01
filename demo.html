@@ -17,14 +17,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 <body style="background:#f1f1f1;">
   <template id="page-template" is="auto-binding">
-    <polymer-datatables-demo data="{{ data2 }}" id="mytable" columns="{{ columns }}" numbers="true" search="{{ search }}" name="New Customers"></polymer-datatables-demo>
     <polymer-datatables-demo data="{{ data }}" id="mytable" columns="{{ columns }}" numbers="true" search="{{ search }}" name="New Customers"></polymer-datatables-demo>
   </template>
 
   <script>
     var template = document.querySelector('#page-template');
     template.columns = [
-        // { "data": null, "orderable":false },
         { "data": "name", "title": "Name" },
         { "data": "position", "title": "Position" },
         { "data": "office", "title": "Office" },

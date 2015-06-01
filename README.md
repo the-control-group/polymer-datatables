@@ -1,7 +1,4 @@
-<!--
-@element polymer-datatables
-@author designbyraychou
-@homepage https://github.com/the-control-group/polymer-datatables
+# polymer-datatables
 
 **This element is compatible with Polymer 0.5.**
 
@@ -129,14 +126,3 @@ Return total number of records
 #### `currentPage`
 
 Return number for current page.
-
--->
-<link rel="import" href="polymer-datatables-export-csv.html">
-<link rel="import" href="polymer-datatables-filter.html">
-<link rel="import" href="polymer-datatables-next.html">
-<link rel="import" href="polymer-datatables-pages.html">
-<link rel="import" href="polymer-datatables-perpage-selector.html">
-<link rel="import" href="polymer-datatables-previous.html">
-<link rel="import" href="polymer-datatables-result-range.html">
-<link rel="import" href="polymer-datatables-search.html">
-<link rel="import" href="polymer-datatables-table.html">

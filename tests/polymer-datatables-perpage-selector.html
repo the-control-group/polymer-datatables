@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>polymer-datatables-perpage-selector tests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../jquery/dist/jquery.min.js"></script>
+  <script src="../../lodash/lodash.js"></script>
+  <link rel="import" href="../polymer-datatables-perpage-selector.html">
+</head>
+<body unresolved>
+  <polymer-datatables-perpage-selector
+    perPage="{{ perPage }}"
+    perPageCount="{{ perPageCount }}"
+    currentPage="{{ currentPage }}"
+    pageTotal="{{ pageTotal }}"></polymer-datatables-perpage-selector>
+  <script>
+    window.addEventListener('polymer-ready', function(e) {
+      var el = document.querySelector('polymer-datatables-perpage-selector');
+      el.perPage = 25;
+      el.perPageCount = [10,25,50,100];
+      el.pageTotal = 100;
+      el.currentPage = 1;
+      el.$.filter.querySelector('core-menu').selected = 50
+      suite('<polymer-datatables-perpage-selector>', function () {
+        test('initializes', function () {
+          assert(el._readied);
+        });
+        test('select dropdown', function () {
+          el.$.filter.querySelector('core-menu').selected = 50;
+          assert.equal(el.perPage,50);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
