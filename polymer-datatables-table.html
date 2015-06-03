@@ -49,6 +49,8 @@ Polymer({
 				}
 			});
 		}
+		// Use existing order if it exists
+		if( poly.tableApi ) order = poly.tableApi.order();
 
 		// Destroy old table
 		if( poly.tableApi ) poly.tableApi.destroy();
