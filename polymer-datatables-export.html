@@ -35,8 +35,11 @@
       _.each( poly.data, function(row) {
         var d = [];
         _.each(keys, function(key) {
-          row[key] = row[key] || '';
-          d.push( row[key].replace(/,/g, '').replace(/^\s+|\s+$/g, '') );
+          var cellData = row[key] || '';
+          if (typeof cellData === 'string') {
+            cellData = cellData.replace(/,/g, '').replace(/^\s+|\s+$/g, '');
+          }
+          d.push( cellData );
         });
         poly.exportData.push(d);
       });
