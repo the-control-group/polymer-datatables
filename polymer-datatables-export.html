@@ -3,7 +3,6 @@
 <polymer-element name="polymer-datatables-export" attributes="columns data filename timeFormat">
   <template></template>
   <script src="../lodash/lodash.js"></script>
-  <script src="../momentjs/moment.js"></script>
   <script>
   Polymer({
     publish: {
@@ -12,6 +11,18 @@
       timeFormat: '-MM-DD-YY',
       exportData: [],
       displayTime: '',
+    },
+    attached: function() {
+      function loadScript(url) {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = url;
+        document.body.appendChild(script);
+      }
+      // Load Moment
+      if( typeof window.moment == 'undefined' ) {
+        loadScript("../moment/min/moment.min.js");
+      }
     },
     export: function(event, detail, sender) {
       var poly = this;

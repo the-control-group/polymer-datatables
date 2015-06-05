@@ -9,7 +9,7 @@
   <template>
     <paper-dropdown-menu label="{{ label }}" id="filter">
       <paper-dropdown class="dropdown">
-        <core-menu valueattr="label" class="menu" selected="{{ selected}}">
+        <core-menu valueattr="label" class="menu" selected="{{ selected }}">
           <template repeat="{{ option in options }}">
             <paper-item label="{{ option }}">{{ option }}</paper-item>
           </template>
