@@ -24,6 +24,7 @@
     publish: {
       label: 'Select Option',
       column: '',
+      columns: null,
       options: [],
       filters: {},
       tableApi: null,
@@ -34,26 +35,38 @@
         this.options = _.clone(this.filters[this.column]);
         var index = _.indexOf(this.options,'');
         if( index != -1 ) this.options.splice(index, 1)
-        this.options.unshift('All');
+        this.options.unshift(this.label);
         var poly = this;
         _.each(poly.columns,function(column, i) {
           if( column.data == poly.column ) poly.columnIndex = i;
         });
       }
     },
+    updateFilter: function(val) {
+        var poly = this;
+        val = val || '';
+        if( val == this.label ) {
+          val = '';
+        } else {
+          val = $.fn.dataTable.util.escapeRegex(val);
+        }
+        poly.tableApi.column(poly.columnIndex)
+          .search( val ? '^'+val+'$' : '', true, false )
+          .draw();
+    },
     filtersChanged: function(oldValue,newValue) {
       if( newValue ) this.setOptions();
     },
     selectedChanged: function(oldValue,newValue) {
       if( newValue ) {
-        var poly = this;
-        var val = '';
-        if( newValue != 'All' ) {
-          val = $.fn.dataTable.util.escapeRegex(newValue);
-        }
-        poly.tableApi.column(poly.columnIndex)
-          .search( val ? '^'+val+'$' : '', true, false )
-          .draw();
+        this.updateFilter(newValue);
+      }
+    },
+    tableApiChanged: function(o,n) {
+      if( o && n && this.selected ) {
+        this.async(function(){
+          this.updateFilter(this.selected);
+        });
       }
     },
     onSelect: function(event, detail, sender) {
