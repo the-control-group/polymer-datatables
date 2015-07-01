@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="polymer-datatables-export" attributes="columns data filename timeFormat">
+<polymer-element name="polymer-datatables-export" attributes="columns data filename exportTime">
   <template></template>
   <script src="../lodash/lodash.js"></script>
   <script>
@@ -8,9 +8,8 @@
     publish: {
       filename: 'data-export',
       data: [],
-      timeFormat: '-MM-DD-YY',
+      exportTime: null,
       exportData: [],
-      displayTime: '',
     },
     attached: function() {
       function loadScript(url) {
@@ -28,8 +27,8 @@
       var poly = this;
       poly.exportData = [];
 
-      if( poly.timeFormat ) {
-        poly.displayTime = moment().format(poly.timeFormat);
+      if( ! poly.exportTime ) {
+        poly.exportTime = moment().format('-MM-DD-YY');
       }
 
       // Add titles

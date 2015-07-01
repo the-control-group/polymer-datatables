@@ -26,7 +26,7 @@
 
       // Download CSV
       sender.setAttribute("href", encodedUri);
-      sender.setAttribute("download", poly.filename+poly.displayTime+".csv");
+      sender.setAttribute("download", poly.filename+poly.exportTime+".csv");
       sender.click();
       // Reset
       sender.setAttribute("href","");
