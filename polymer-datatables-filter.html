@@ -42,9 +42,11 @@
 					if( column.data == poly.column ) poly.columnIndex = i;
 				});
 				// Default Filter
-				if( _.indexOf( this.options, this.default ) != -1 ) {
-					this.selected = this.default;
-				}
+				this.async(function(){
+					if( _.indexOf( this.options, this.default ) != -1 ) {
+						this.selected = this.default;
+					}
+				});
 			}
 		},
 		updateFilter: function(val) {
