@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="polymer-datatables-table" attributes="data orderBy columns perPage resultTotal perPageCount pageTotal tableApi currentPage serverSide options filters">
+<polymer-element name="polymer-datatables-table" attributes="data orderBy columns perPage resultTotal perPageCount pageTotal tableApi currentPage options filters">
 <template>
 	<style>
 		.dataTables_filter,
@@ -96,6 +96,7 @@ Polymer({
 			// Create Table
 			var t = $(poly.$.table);
 			poly.setTableData();
+
 			// Create Filters
 			t.on('draw.dt', function() {
 				poly.job('tableFilter',function() {

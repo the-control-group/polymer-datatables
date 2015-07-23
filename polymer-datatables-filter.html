@@ -5,73 +5,78 @@
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 
-<polymer-element name="polymer-datatables-filter" attributes="column columns label filters tableApi options">
-  <template>
-    <paper-dropdown-menu label="{{ label }}" id="filter">
-      <paper-dropdown class="dropdown">
-        <core-menu valueattr="label" class="menu" selected="{{ selected }}">
-          <template repeat="{{ option in options }}">
-            <paper-item label="{{ option }}">{{ option }}</paper-item>
-          </template>
-        </core-menu>
-      </paper-dropdown>
-    </paper-dropdown-menu>
+<polymer-element name="polymer-datatables-filter" attributes="column columns label filters tableApi default options">
+	<template>
+		<paper-dropdown-menu label="{{ label }}" id="filter">
+			<paper-dropdown class="dropdown">
+				<core-menu valueattr="label" class="menu" selected="{{ selected }}">
+					<template repeat="{{ option in options }}">
+						<paper-item label="{{ option }}">{{ option }}</paper-item>
+					</template>
+				</core-menu>
+			</paper-dropdown>
+		</paper-dropdown-menu>
 
-  </template>
-  <script src="../lodash/lodash.js"></script>
-  <script>
-  Polymer({
-    publish: {
-      label: 'Select Option',
-      column: '',
-      columns: null,
-      options: [],
-      filters: {},
-      tableApi: null,
-      columnIndex: 0,
-    },
-    setOptions: function() {
-      if( this.filters && this.filters[this.column] ) {
-        this.options = _.clone(this.filters[this.column]);
-        var index = _.indexOf(this.options,'');
-        if( index != -1 ) this.options.splice(index, 1)
-        this.options.unshift(this.label);
-        var poly = this;
-        _.each(poly.columns,function(column, i) {
-          if( column.data == poly.column ) poly.columnIndex = i;
-        });
-      }
-    },
-    updateFilter: function(val) {
-        var poly = this;
-        val = val || '';
-        if( val == this.label ) {
-          val = '';
-        } else {
-          val = $.fn.dataTable.util.escapeRegex(val);
-        }
-        poly.tableApi.column(poly.columnIndex)
-          .search( val ? '^'+val+'$' : '', true, false )
-          .draw();
-    },
-    filtersChanged: function(oldValue,newValue) {
-      if( newValue ) this.setOptions();
-    },
-    selectedChanged: function(oldValue,newValue) {
-      if( newValue ) {
-        this.updateFilter(newValue);
-      }
-    },
-    tableApiChanged: function(o,n) {
-      if( o && n && this.selected ) {
-        this.async(function(){
-          this.updateFilter(this.selected);
-        });
-      }
-    },
-    onSelect: function(event, detail, sender) {
-      this.$.filter.getSelection();
-    },
-  });
-  </script>
+	</template>
+	<script src="../lodash/lodash.js"></script>
+	<script>
+	Polymer({
+		publish: {
+			label: 'Select Option',
+			column: '',
+			columns: null,
+			options: [],
+			filters: {},
+			tableApi: null,
+			columnIndex: 0,
+			default: null,
+		},
+		setOptions: function() {
+			if( this.filters && this.filters[this.column] ) {
+				this.options = _.clone(this.filters[this.column]);
+				var index = _.indexOf(this.options,'');
+				if( index != -1 ) this.options.splice(index, 1)
+				this.options.unshift(this.label);
+				var poly = this;
+				_.each(poly.columns,function(column, i) {
+					if( column.data == poly.column ) poly.columnIndex = i;
+				});
+				// Default Filter
+				if( _.indexOf( this.options, this.default ) != -1 ) {
+					this.selected = this.default;
+				}
+			}
+		},
+		updateFilter: function(val) {
+			var poly = this;
+			val = val || '';
+			if( val == this.label ) {
+				val = '';
+			} else {
+				val = $.fn.dataTable.util.escapeRegex(val);
+			}
+			poly.tableApi.column(poly.columnIndex)
+				.search( val ? '^'+val+'$' : '', true, false )
+				.draw();
+		},
+		filtersChanged: function(oldValue,newValue) {
+			if( newValue ) this.setOptions();
+		},
+		selectedChanged: function(oldValue,newValue) {
+			if( newValue ) {
+				this.updateFilter(newValue);
+			}
+		},
+		tableApiChanged: function(o,n) {
+			if( o && n && this.selected ) {
+				this.async(function(){
+					this.updateFilter(this.selected);
+				});
+			}
+		},
+		onSelect: function(event, detail, sender) {
+			this.$.filter.getSelection();
+		},
+	});
+	</script>
 </polymer-element>
