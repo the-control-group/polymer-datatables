@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="polymer-datatables-export" attributes="columns data filename exportTime">
+<polymer-element name="polymer-datatables-export" attributes="columns data filename exportTime tableApi">
   <template></template>
   <script src="../lodash/lodash.js"></script>
   <script>
@@ -10,6 +10,7 @@
       data: [],
       exportTime: null,
       exportData: [],
+      exportAll: true,
     },
     attached: function() {
       function loadScript(url) {
@@ -42,7 +43,19 @@
       });
       // Add data for csv
       poly.exportData.push(titles);
-      _.each( poly.data, function(row) {
+
+      var data;
+      if( poly.exportAll ) {
+        data = _.clone(poly.data);
+      } else {
+        data = poly.tableApi.rows({
+          order:  'applied',
+          search: 'applied',
+          page:   'all',
+        }).data();
+      }
+
+      _.each( data, function(row) {
         var d = [];
         _.each(keys, function(key) {
           var cellData = row[key] || '';
